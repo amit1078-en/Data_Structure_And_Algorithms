@@ -1,0 +1,16 @@
+class Solution {
+    public int getSum(int a, int b) {
+     while(b!=0){
+         int c = a&b;
+         a  = a^b;
+         if(c==0)
+         {
+             break;
+         }
+         else{
+             b = c<<1;
+         }
+     }
+      return a;
+}
+}
