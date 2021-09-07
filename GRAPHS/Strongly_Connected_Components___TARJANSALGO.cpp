@@ -1,119 +1,169 @@
-class Solution {
-public:
-    void dfs(long long dis[],long long help[],long long top,vector<long long> array[],unordered_set<long long> seet,bool check[],vector<vector<int>> &ans,stack<long long> MYSTACK,long long n){
-        static long long k = 0;
-        dis[top] = help[top] = ++k;
-        MYSTACK.push(top);
-        check[top] = true;
-       
-        for(long long ok:array[top])
+/*
+Given a Directed Graph with V vertices and E edges, Find the members of strongly connected components in the graph.
+
+
+Example 1:
+
+Input:
+
+Output:
+0 1 2,3,4,
+Explanation:
+
+We can clearly see that there are 3 Strongly
+Connected Components in the Graph as mentioned
+in the Output.
+Example 2:
+
+Input:
+
+Output:
+0 1 2,
+Explanation:
+All of the nodes are connected to each other.
+So, there's only one SCC as shown.
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function tarjans() which takes the number of vertices V and
+ adjacency list of the graph as input parameters and returns a list of list of integers denoting the members of strongly connected components 
+ in the given graph.
+ 
+ 
+Note: A single strongly connected component must be represented in the form of a list if integers sorted in the ascending order.
+ The resulting list should consist of a list of all SCCs which must be sorted in a way such that a lexicographically smaller list of integers 
+ appears first.
+
+
+Expected Time Complexity: O(V + E).
+Expected Auxiliary Space: O(V).
+
+
+Constraints:
+1 = V  = 105
+1 = E  = 105
+0 = u, v = N-1
+
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+
+ // } Driver Code Ends
+//User function template for C++
+class node{
+    public:
+    int first;
+    int second;
+};
+class Solution
+{
+	public:
+	
+	bool track[100001];
+	int len = 0;
+	 vector<vector<int>> help;
+	 
+	void dfs(int t,vector<int> adj[], node obj[],stack<int> &st)
+	{
+	    track[t] = true;
+	    len+=1;
+	    st.push(t);
+	    obj[t].first = len;
+	    obj[t].second = len;
+	    for(int i :adj[t])
+	    {
+	        if(track[i] )
+	        {
+	            obj[t].first = min(obj[i].second,obj[t].first);
+	        }
+	        else if(obj[i].second==INT_MAX){
+	           dfs(i,adj,obj,st);
+	           obj[t].first = min(obj[i].first,obj[t].first);
+	        }
+	    }
+	    if(obj[t].first==obj[t].second)
+	   {
+	       vector<int> tempp;
+	       
+	       while(st.top()!=t)
+	       {
+	           tempp.push_back(st.top());
+	           track[st.top()] = false;
+	           st.pop();
+	       }
+	       if(track[st.top()])
+	       {
+	           track[t]=false;
+	           tempp.push_back(st.top());
+	       }
+	       st.pop();
+	       sort(tempp.begin(),tempp.end());
+	       help.push_back(tempp);
+	   }
+	}
+    vector<vector<int>> tarjans(int V, vector<int> adj[])
+    {
+       help.clear();
+        node obj[V+1];
+        for(int i = 0 ; i<V;i++)
         {
-            if(dis[ok]==-1)
+            obj[i].first=INT_MAX;
+            obj[i].second = INT_MAX;
+            track[i] = false;
+        }
+        len = -1;
+        stack<int> st;
+        for(int i = 0 ; i<V;i++)
+        {
+            if(obj[i].first==INT_MAX)
             {
-            	dfs(dis,help,ok,array,seet,check,ans,MYSTACK,n);
-            		help[top] = min(help[top],help[ok]);
-                if(help[top]!=help[ok])
-                {
-                     if((seet.count((ok*n)+top)==0 && seet.count((top*n)+ok)==0))
-                        {
-                            vector<long long> uu;
-                            uu.push_back(ok);
-                             uu.push_back(top);
-                            ans.push_back(uu);
-                            seet.insert((ok*n)+top);
-                            seet.insert((top*n)+ok);
-                        }
-                }
-			}
-			 if(check[ok]==true)
-			{
-				help[top] = min(help[top],dis[ok]);
-                //     if(help[top]!=help[ok])
-                // {
-                //      if((seet.count((ok*n)+top)==0 && seet.count((top*n)+ok)==0))
-                //         {
-                //             vector<long long> uu;
-                //             uu.push_back(ok);
-                //              uu.push_back(top);
-                //             ans.push_back(uu);
-                //             seet.insert((ok*n)+top);
-                //             seet.insert((top*n)+ok);
-                //         }
-                // }
-			}
-        }
-        if(dis[top]==help[top])
-        {
-            
-        	while(top!=MYSTACK.top())
-        	{
-        		check[MYSTACK.top()]  = false;
-        		MYSTACK.pop();
-			}
-			check[MYSTACK.top()]  = false;
-			MYSTACK.pop();
-            
-		}
-		return ;
-    }
-    vector<vector<int>> criticalConnections(long long n, vector<vector<int >>& connections) {
-        bool check[n];
-        long long dis[n];
-        long long help[n];
-        unordered_set<long long> seet;
-        vector<long long> array[n];
-         vector<pair<int,long long>> lol;
-        for(long long i  = 0; i <connections.size();i++)
-        {
-            array[connections[i][0]].push_back(connections[i][1]);
-            lol.push_back({connections[i][1],connections[i][0]});
-        }
-        for(long long i = 0 ; i<n;i++)
-        {
-            check[i] = false;
-            dis[i] = -1;
-            help[i] = -1;
-        }
-        connections.clear();
-        stack<long long> MYSTACK;
-        for(long long i  =0 ;i<n;i++)
-        {
-            if(dis[i]==-1)
-            {
-                dfs(dis,help,i,array,seet,check,connections,MYSTACK,n);
+                dfs(i,adj,obj,st);
             }
         }
-          for(long long i  = 0; i <lol.size();i++)
-        {
-            array[lol[i].first].push_back(lol[i].second);
-        }
-       if(connections.empty()==true)
-       {
-           for(long long i  = 0 ; i<n;i++)
-           {
-               
-               long long ele = 0;
-               long long one = 1;
-               for(long long j:array[i])
-               {
-                   one = j;
-                   ele++;
-               }
-               if(ele==1)
-               {
-                   if(seet.count(((n*one)+i)%1000)==0 && seet.count((n*i)+one)==0)
-                   {
-                   	
-                       vector<int > tem;
-                       tem.push_back(one);
-                       tem.push_back(i);
-                       connections.push_back(tem);
-                       seet.insert((n*one)+i);
-                        seet.insert((n*i)+one);
-                   }
-               }
-           }
-       }
-            return connections;
+        sort(help.begin(),help.end());
+        return help;
     }
 };
+
+// { Driver Code Starts.
+
+
+int main()
+{
+    
+    int t;
+    cin >> t;
+    while(t--)
+    {
+        int V, E;
+        cin >> V >> E;
+
+        vector<int> adj[V];
+
+        for(int i = 0; i < E; i++)
+        {
+            int u, v;
+            cin >> u >> v;
+            adj[u].push_back(v);
+        }
+
+        Solution obj;
+        vector<vector<int>> ptr = obj.tarjans(V, adj);
+
+        for(int i=0; i<ptr.size(); i++)
+        {
+            for(int j=0; j<ptr[i].size(); j++)
+            {
+                if(j==ptr[i].size()-1)
+                    cout<<ptr[i][j];
+                else
+                    cout<<ptr[i][j]<<" ";
+            }
+            cout<<',';
+        }
+        cout<<endl;
+    }
+
+    return 0;
+}
+

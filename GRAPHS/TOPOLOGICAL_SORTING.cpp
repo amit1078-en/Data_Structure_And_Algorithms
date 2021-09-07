@@ -32,7 +32,9 @@ graph is 5, 2, 1, 3, 4, 0.
  
 
 Your Task:
-You don't need to read input or print anything. Your task is to complete the function topoSort()  which takes the integer V denoting the number of vertices and adjacency list as input parameters and returns an array consisting of a the vertices in Topological order. As there are multiple Topological orders possible, you may return any of them. If your returned topo sort is correct then console output will be 1 else 0.
+You don't need to read input or print anything. Your task is to complete the function topoSort()  which takes the integer V denoting the number 
+of vertices and adjacency list as input parameters and returns an array consisting of a the vertices in Topological order. As there are multiple
+ Topological orders possible, you may return any of them. If your returned topo sort is correct then console output will be 1 else 0.
 
 
 Expected Time Complexity: O(V + E).
