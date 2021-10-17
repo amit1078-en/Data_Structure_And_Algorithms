@@ -28,7 +28,8 @@ void prims(int nodes)
 		
 		for(int i =  0 ;i<s;i++)//traverses the nodes inserted
 		{
-			for(int j =  0 ; j<nodes;j++){
+			for(int j =  0 ; j<nodes;j++)
+			{
 				//if node is inserted or not && connection between nodes is present or not && current cost should be less than before
 				if(track[j]==false && graph[nodesadded[i]][j]!=0 && graph[nodesadded[i]][j]<C){
 					x =nodesadded[i];

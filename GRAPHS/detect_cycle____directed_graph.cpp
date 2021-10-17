@@ -54,7 +54,8 @@ class Solution
                      track[top] = true;
                      temp[top] = true;
                      bool help = true;
-                     for(int j:adj[top]){
+                     for(int j:adj[top])
+					 {
                         if(track[j]==false && temp[j]==false)
                         {
                             track[j] = true;
